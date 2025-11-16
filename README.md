@@ -20,7 +20,7 @@ Use:
         1.0 5
         6 7
         -99 2
-        ... (ecetera)
+        ... (excetera)
 
         no leading or trailing whitespace and 1 x y coordinate per line
 
