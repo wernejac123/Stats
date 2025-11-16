@@ -9,3 +9,4 @@ SRC="misc.c file.c table.c stats.c main.c"
 LDFLAGS="-lm"
 
 $CC $CFLAGS $SRC -o stats $LDFLAGS
+strip -s stats
