@@ -5,9 +5,11 @@ Stats:
   
 Use:
   ./stats -v or ./stats --version 
+  
       print version
       
   ./stats FILE 
+  
       read in a file and calculate statistics on points entered
 
     NOTE: version or file options but not both (can't do ./stats -v table1.txt)
