@@ -12,4 +12,5 @@ stats-0.0.1 changelog (from unreleased version)
 	-added -v/--version command line option
 	-table and stats calculations printed in engineering format
 	-added minimum and maximum functions for x & y arrays
+	-added DEBUG macro in debug.h to turn on debug mode (DEBUG 0 debug mode is off, DEBUG 1 debig mode is on
 	-other miscellaneous changes I forgot about 
