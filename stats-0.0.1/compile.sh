@@ -4,7 +4,7 @@
 # $CC: compiler
 
 CC="gcc"
-CFLAGS="-std=c11 -O2 -Winline -g -Wall -Werror -Wextra -Wconversion"
+CFLAGS="-std=c11 -O2 -g -Wall -Werror -Wextra -Wconversion"
 SRC="misc.c file.c table.c stats.c main.c"
 LDFLAGS="-lm"
 
