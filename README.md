@@ -1,6 +1,6 @@
 Stats:
   A program to do common statistics calculations. Edit a seperate file with name of table and x & y points, 
-  then run ./stats FILE to calculate statistics on points entered in FILE
+  then run ./stats FILE to calculate statistics on points entered in FILE.
   Statistics are printed in engineering format.
   
 Use:
