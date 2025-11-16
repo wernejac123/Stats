@@ -1,0 +1,14 @@
+stats-0.0.1 changelog (from unreleased version)
+	-separate structures for table and stats calculation variables
+	-functions return error codes or NULL to indicate errors
+	-all function calls in main() handle errors
+	-headers have guards against being included multiple times
+	-rewrote program from scratch
+	-no menu: table is written in a seperate file and read in (argc/argv)
+	-rename variables 
+	-better error checking in functions (functions are self contained & don't rely on 
+		checks in other functions). functions check their own parameters. 
+	-clearer error messages
+	-added -v/--version command line option
+	-table and stats calculations printed in engineering format
+	-other miscellaneous changes I forgot about 

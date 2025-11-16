@@ -1,0 +1,290 @@
+//this file is mainly for me as the devoper to indicate what I changed each day I worked on it
+
+
+9/13/25 (some of this was actually done a few days ago)
+	-split my calc program into 2 programs with this one being the stats part
+	-checked memory allocation with valgrind -s --tool=memcheck (showed no leaks) also was a flag i used  for full mem check 
+         which i forgot the name of
+	-am seperating table structure into 2 structures: Table & Stats (NOT FULLY IMPLEMENTED YET)
+	-adding insert/delete at position + delete/insert at end (NOT FULLY IMPLEMENTED YET)
+	-defined macro to check allocation
+	-created table of error messages with pointer variables
+	-used #if/#endif with DEBUG to conditionally print debug info depending on if DEBUG is 0 or not 
+	-appropriately split error.h into error.c with global variables in header declared as "extern" & definitions in error.c 
+	-tested functions and error messages + checked expansion of macro with gcc -E
+	-changing how it compiled with gcc -g -Wall -Werror -Wextra -Wconversion 
+	-switching from make file to bash script (NOT WRITTEN YET) (also don't forget to have strip -s on binary after debugging it)
+	-still am going to need to fix comparision error in stats functions (NOT IMPLEMENTED YET)
+	-added this changelog
+
+	things to consider:
+		-inline or macro? (inline requires gcc optimization)
+		-using float.h to check for double overflow/underflow
+		-data structure arry, linked list (single or double) with head & tail, hash maps/sets
+		-using padding bytes in array or linked list
+	 	-further research memory safety in c (want 100% memory safety)
+		-using command line arguments in shell script to compile for final binary & testing (gdb, strace, valgrind, etc)
+		-static keyword
+
+9/18/25
+	-changed variables + the array in error.h to const (prevent accidental change to it
+	-further tested macro (set tbl.x in creat_table()  to NULL before CHECK_ALLOC(tbl.x), prints error message
+	-wrote bash script to compile code
+	-wrote function to insert a point at a position (TESTED)
+	-edit macro with do{}while(0) inside (fixes potential problems like using the macro in an if statement).
+
+	things to do:
+		check for repetive code (relating to errors/error messages) and write a function or macro for it 
+9/21/25
+	-changed element curr in Table structure to next (less ambiguous name with a clearer meaning of what it's for)
+	-replace malloc with calloc (calloc initiallizes every bute with the value 0) + checked with valgrind
+	-change insert_pos() from while loop to for loop 
+		ERROR: segment fault when pos=0 (was there when it was a while loop. 
+	things to do:
+		-fix error handling (use errno.h & string for built in errors & create a function/macro to handle user defined errors
+		-creat_table should create a dynamic table and return type should be of type Table * 
+		-create strings and corresponding error codes 
+		-functions that can fail should have a return code of some kind
+	-modified comments & removed all predirectives uesed (no debugging at the moment)
+
+9/22/25
+	-fixed segment fault in insert_pos) (added if(i == 0) break; in for loop) + tested it at every point (0 to 5)
+	-modified error messages
+	-tested edit_table() at every point from 0 to 5
+	-created error code enumeration and a function to print an error message associated with an error code + the error code 
+	  itself (failure only). 
+	-tested error message function
+
+	Things to do:
+		-functions still need to return error codes (except ones that return values)
+		-creat_table to return Table * or to an error code (means tables are dynamic)
+
+9/30/25
+	-change name in Table struct to dynamically allocated
+	-change table1 to be a dynamically allocated in test main() function (end of table.c) **Remove this later and put in main.h
+	-added error codes 
+	-change functions from void to int (return error codes)
+	-more specific error messages
+		follows the format file:function:error message:error code (specifies the variable and the struct/enum/union/function/etc... where the variable 
+		is causing the error is  where applicable)
+		(function in error message spcifies return type and parameters in it)	
+		**might not want all this info for errors relating to user input (error messages for the user) or a predirective DEBUG mode for the error 
+		  message for the programmer when DEBUG=1)	
+	-deleted error.c and macro in error.h (only contains enumeration for error codes)
+	-better commenting (what function does and if it returns anything), things to watch out for (like the comments at the top of table.c, and what an error 
+	 indicates (NULL pointer meaing space was not allocated. etc...)
+        -functions check for errors relating to that function, regardless if it's tested for in another function or the compiler catching it
+
+	*NOTE: functions with int return type have been fixed and tested for every logical outcome + tested whole program with valgrind
+	       continue to change functions to return error codes and test with valgrind each time 
+	       setting pointers to NULL is a way to test for an error code but the space will still be allocated (does not simulate real memory allcation 
+	       failure). when a function changes, the error message needs to be changed to match its declaration
+10/2/25
+	-finished fixing functions to return error codes 
+	-thoroughly tested each function (setting values to NULL to get the error message. Is not a real error (like real memory allocation failure)
+	-re-checked memory with valgrind
+	-ran tests on behavior relating to overflow/underflow (decided bounds checking is not necessary see test.c for why)
+	MISSING: function to delete at a position
+	         then work on the stats structure and related functions
+
+10/5/25
+	-start these functions with u to indicate they are for unsorted arrays: 
+         int uedit_table(Table **ptr, unsigned int pos, double x, double y);
+	 int uinsert_end(Table **ptr, double x, double y); //insert point at end of table
+	 int uinsert_pos(Table **ptr, unsigned int pos, double x, double y);
+	 int udel_end(Table **ptr);
+
+	-modified error messages & comments to be more specific
+	-limit the length of lines of code to appoximately 72-80 columns long
+	-removed float.h from table.c (not needed)
+	-started function for deleting by position (not finished and need to recheck error messages for all other functions first + valgrind memory check again) 
+	-insert blank line before error messages and extra blank line after 
+	-created test.txt to log tests ran (very specific of exactly what I did for a particular test)
+	-change uinsert_end() error message (don't reference by (*ptr)->name but "table" in string. would have to add a check for if (*ptr)->name == NULL)
+	-retested creat_table(), free_table() & uinsert_end() functions (NOT DONE TESTING THE REST)
+
+
+	THINGS TO DO: -finish testing functions I already have (and log tests in test.txt)
+		      -run all files for this stats program through ispell and/or aspell (check for spelling errors)
+		      -finish function for delete by position, test it, and log in test.txt	
+		      -make sure insert by possition function checks if table is full ( (*ptr)->next = MAX_PTS) --double check this logic
+		      -make sure delete by position function checks if table is empty ( (*ptr)->next <= 0) --double check this logic
+		      -finish udel_pos() function
+10/6/25
+	-finished test for uinsert_end() without errors & tested print_table() (NOT DONE TESTING THE REST
+
+	THINGS TO DO: -finish testing functions I already have (and log tests in test.txt)
+                      -run all files for this stats program through ispell and/or aspell (check for spelling errors)
+                      -finish function for delete by position, test it, and log in test.txt
+                      -make sure insert by possition function checks if table is full ( (*ptr)->next = MAX_PTS) --double check this logic
+                      -make sure delete by position function checks if table is empty ( (*ptr)->next <= 0) --double check this logic
+                      -finish udel_pos() function
+
+10/9/25
+	-finished testing uedit_table() & uinsert_pos()
+	-finished writing udel_pos() & testing
+	-retest with valgrind 
+	-seperate test main function from table.c (likely to delte this later)
+	-shell script for test run (same tests i have now)
+	-edit old stats.h file (rename variables with 'sigma' to 'o' [i.e ox oy instead of sigmay sigmax])
+	-create main.c & edit shell script
+	-replace #include table.h with #include stats.h	in main.c (stats.h includes table.h so not needed in main)
+	-started the main menu of the program and some of the options
+	-modified print_table(): added a line count and prompts the user for input for every 30 point printed of x, y
+	 (this is so the entire table can be viewed if its longer than the terminal can display
+	-changed point input: put in a do-while loop so the user can enter multiple points at once.
+	 exit loop by entering 'd' when the blank prompt appears
+
+	*PROBLEM: had to add a prompt after every point entered. Otherwise, 'd' would exit later than expected (after 1 more x & 1 point)
+                  if 'd' is entered only in the blank prompt, it will exit the loop immediately
+
+	THINGS TO DO:
+		-have to retest program (with breaks in loop) : valgrind, too many points, check print_table() since its been modified
+		-observe how different error codes affect flow of program
+
+	THINGS TO CONSIDER:
+	-considering integrating curses/ncurses into this project (after learning the libraries) (may fix problem in do-while loop
+	-conditional compiling based of a macro defined for specifi OS's (clang, watcomf, gcc, etc) --different OSs have different compilers 
+	-figure out how to get x & y as 1 string (x,y) or (x y) and tokenize the string with strtok()
+	-seperate header and .c file for input
+	-function to convert a string into 2 points (cannot have 2 returns)
+	-experiment with a point structure typedef struct Point{doublex, double y}Point; (likely be a problem)
+
+10/11/25 
+	-started a test directory (~/stats0.0.1/test/input) for testing how i'm going to implement input for this program
+	--fixed some spelling errors in the comments of error.h
+
+	THINGS TO CONSIDER:
+		-write error.h in a generic way (not specific to only tables) so it can be used in any project (i.e rename ERR_TABLE_EMPTY and ERR_TABLE_FULL to ERR_EMPTY & ERR_FULL)
+		 with comments written genericially for any data type where these types of errors can occur
+
+(undocumented) spent a few days working on a test parsing program & and a test program in test/input/test.c to check if a number is a valid double
+(STILL need a function to check unsigned int (for pos))
+
+10/21/25
+	-remove error.h; just use 1 to indicate error
+	-switch print_table() to scientific notation %E
+	-change most functions return 1 instead of exit
+	-STILL FIXING functions (after removing error.h)
+	-replace error codes in test/input/input.c
+	-add to get_input check string isn't too long in test/input/input.c 
+	-tested some error codes in a while(1) loop. not every one but the ones I tested where not affected being in a loop 
+	-STILL need to test udedit_pos() & uinsert_pos() + the ones commented out
+
+10/22/25
+	-added int print_name(Table *ptr) (fixes a segment fault with printf("%s\n", table1->name); if table1 is a NULL pointer
+	-test functions 
+	-editted error messages for functions invloving a position (error to say its out of bounds)
+	 added hint telling the user to use insert_end() if pos >= (*ptr)->next (ptr is a pointer to a table)
+	(dont want the user using these functions unless needed. functions invovling position are O(n), but
+	uinsert_end() is O(1) )
+	-edit error messages (rephrase as "out of range" instead of "out of bounds" (more accurate)
+	-experimented with sscanf() in seperate program. stick to strtok() in project. sscanf() is a problem if strings are longer than expected.
+	    also sscanf() is only memory safe if it has something like %2s, but if the string is longer than 2, it screws up x, y, & pos
+	    flushing stdin didn't fix anything and still gives number of commands error when it should be a string length error.
+
+	THINGS TO DO:
+		-finish checking functions in table.c
+		-finish parsing and write function to check validiity of unsigned int in test/input
+		-copy check_double() function into test test/input/input.c file
+		-test them and move input.c & input.h into top directory in ~/stats0.0.1
+		-look into strtod(). AI says it has better error checking than atof() 
+
+10/27/25
+	-started experiment in test/experiment where data to a table is added to a file before launching ./stats
+        - this could eliminate most (or all insert/delete functions) 
+	- easier to insert points (user just edits file)
+
+	FILE FORMAT
+	table_name                      line1
+	x[0] y[0]                       exactly 1 space between x and y (not indents on any line)
+   	x[1] y[1]		
+        ...
+
+	-modified print_table in test/experiment (ONLY) remove print of ptr->next
+	-finsihed table part of program (in test/experiment ONLY)
+	-changed buffer to 1 line instead of an array (in test/experiment ONLY)
+	-move all buffer/file operattions into file.c (in test/experiment ONLY)
+	-tested functions in file.c (in test/experiment ONLY)
+	-added guards in headers to prevent multiple includes (in test/experiment ONLY)
+	-fix: main handles the error from cp_file2table() so it now exits main early when any error occurs in this funmction
+	-decided ht functions free_buff() && free_table() don't need to exit early (functions themselves prevent double frees)
+  
+	things to do:
+		-remove unneccesary functions in table.c (in test/experiment ONLY)
+		-further check with valgrind when function/main returns early)
+		-move files in test/experiment to ~/stats0.0.1  (when done);
+		-make sure main/any function that returns early frees memory when necessary & closes file when necessary
+
+	PROBLEM:
+		-very sesitive to format and has to be exact (not even a whitespace after the last number)
+		-possible fix is to write a bash script (or another c program) with sed/awk that fixes the format (remove trailing white space)
+		-program returns an error with the line_cnt, but line_)cnt starts at 0 and vim startx lines at 1 (add 1 to line_cnt in error message to match line in vim) 
+
+10/29/25
+	-move *.c *.h *.txt from test/experiment to ~/stats0.0.1
+	-remove experiment directory
+	-delete old stats.c file
+	-change binary in compile.h to stats
+        -remove un-needeed functions in table.c
+
+11/05/25
+	-functions creat_table() creat_buff return 1 instead of exitting from function
+	 (exit from main)
+	-fix some leaks in table and buffer functions
+	-main handles some of the errors (if free_buff() or free_table() fails, it will leak)
+	-retest everything with valgrind
+	-fixed some potential segment faults
+
+THINGS TO DO:
+	-further test for segment faults and leaks
+
+11/07/25
+	-added functions to create and destroy Stat structure
+	-editted Stat structure so it has a dynamic Table inside it (rather than in main)
+	-all functions called in main exit on failure (program will still leak if a free table or stat function fails for some reason) 
+	(those inside of loops for other functions failing do not; they already will exit)
+
+11/08/25
+	-chnage changelog to log.txt (wasn't the final changelog)
+	-created sc-im spreadsheat (table2.sc) for table2.txt 
+		(to be used for when I write functions to calculate stats for the program)
+	-defined VERSION macro and made PRINT_VERSION() macro (checked expansion with gcc -g -E main.c|less
+	and tested this
+	-added commandline option -v or --version to print version
+	-remove shebang from compile.sh (works with any compiler EX:bash compile.sh or sh compile.sh)
+	-add variables $SRC $CFLAGS $LDFLAGS $CC to compile.sh ($LDFLAGS is commented out at the momment with will be "-lm"
+		once I add math.h to stats.c
+		$SRC: source files
+		$CFLAGS: compiler options
+		$LDFLAGS: linking options
+		$CC: compiler
+	-added back print next in print_table() function (print_table() will likely only be used for debugging)
+	-added functions calc_stats() & print_stats() (in 1 function instead of seperate ones like old calc program had)
+	-added variables double minx, miny, maxx, maxy to Stats structure (NOT CALCULATED YET) 
+		calculations for these will probably require additional functions
+
+	THINGS TO DO:
+		-define macro DEBUG in debug.h
+		-add predirectives in *.c files to print certain debug info (not parts involving function failure; leave those commented out)
+		-reconsider error handling (what actually needs to be freed and closed) - i don't like the long strand of if-else if-else statements for function calls in min()
+		-further test everything
+		-fuzz input (AFL)
+		-add calculations for mins & maxs
+		-create final changelog
+
+11/09/25
+	-added DEBUG macro in debug.h
+	-uncommented certain things to be used in DEBUG mode with #if DEBUG ... #endif
+
+11/15/25
+	-add getchar() after each #if DEBUG ... #endif statement (makes sure it is viewable)
+	-added some new debugging statements
+	-minor changes in mian to fix leaks
+	-remove print version macro and just use printf("%s\n", VERSION); in main()
+	-add -O2 optimization to compile shell script
+	-change to prints stats in enginerring format
+	-change prints stats and table to %15.8E (minimum of 15 digits printed and prints 8 decimal digits)
+
+	PROBLEM:
+		doubles are only accurate to 15-17 digits (NO GAURENTEE OF ACCURACY with numbers larger than that - although doubles can hold numbers larger than 15-17 digits)
